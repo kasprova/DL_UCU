@@ -1,1 +1,1 @@
-# DL_UCU
+### Deep Learning course at UCU
