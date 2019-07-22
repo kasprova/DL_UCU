@@ -27,7 +27,6 @@ def conv2d_scalar(x_in, conv_weight, conv_bias, device):
     
     #intiale output tensor of the correct size
     z = torch.zeros([batch_size,n_channels_out,height_out,width_out]).to(device)
-    z.requires_grad = True
     
     #fulfill z based on scalar representation
     for n in range(batch_size):
@@ -53,7 +52,6 @@ def im2col(X, kernel_size, device, stride = 1):
     
     #intiale output tensor of the correct size
     X_cols = torch.zeros([S_out*S_out, kernel_size*kernel_size]).to(device)
-    X_cols.requires_grad = True
     
     for i in range(S_out):
         for j in range(S_out):
@@ -90,7 +88,6 @@ def conv2d_vector(x_in, conv_weight, conv_bias, device):
     
     #intiale output tensor of the correct size
     z = torch.zeros([batch_size,C_out,S_out,S_out]).to(device)
-    z.requires_grad = True
     
     #transformation of conv_weight
     conv_weight_rows = conv_weight2rows(conv_weight)
@@ -118,7 +115,6 @@ def pool2d_scalar(a, device, stride = 2):
     
     #intiale an output tensor of the correct size
     z = torch.zeros([batch_size,n_channels_out,height_out,width_out]).to(device)
-    z.requires_grad = True
     
     #fulfill z based on scalar representation
     for n in range(batch_size):
@@ -146,7 +142,6 @@ def pool2d_vector(a, device, stride = 2):
     
     #intiale an output tensor of the correct size
     z = torch.zeros([batch_size,C_out,S_out,S_out]).to(device)
-    z.requires_grad = True
     
     for n in range(batch_size):
         z[n] = im2col(a[n], pooling_size, device, stride=2).max(dim=0).values.view(-1, S_out, S_out)
@@ -163,7 +158,6 @@ def relu_scalar(a, device):
     
     #intiale an output matrix of the correct size
     z = torch.zeros([batch_size, n_inputs]).to(device)
-    z.requires_grad = True
     
     for n in range(batch_size):
         for i in range(n_inputs):
@@ -202,7 +196,6 @@ def reshape_scalar(a, device):
     
     #intiale an output matrix of the correct size
     z = torch.zeros([batch_size, n_outputs]).to(device)
-    z.requires_grad = True
     
     for n in range(batch_size):
         for c_in in range(n_channels_in):
@@ -220,7 +213,7 @@ def reshape_vector(a, device):
     #move to device
     a = a.to(device)
     
-    z = a.clone().view(batch_size,-1).requires_grad_(True)
+    z = a.clone().view(batch_size,-1)
     
     return z
  
@@ -238,7 +231,6 @@ def fc_layer_scalar(a, weight, bias, device):
     
     #intiale an output matrix of the correct size
     z = torch.zeros([batch_size, n_outputs]).to(device)
-    z.requires_grad = True
     
     for n in range(batch_size):
         for j in range(n_outputs):
@@ -256,6 +248,6 @@ def fc_layer_vector(a, weight, bias, device):
     weight = weight.to(device)
     bias = bias.to(device)
     
-    z = (a.matmul(weight.t())+ bias).clone().requires_grad_(True)
+    z = (a.matmul(weight.t())+ bias).clone()
     
     return z
